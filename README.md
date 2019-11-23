@@ -9,7 +9,7 @@ pip install -r requirements.txt
 # Usage
 ```
 usage: main.py [-h] -u xxx@mail.com -p ****** [-F /home/hugo/project]
-               [-f /home/hugo/project/home.md]
+               [-f /home/hugo/project/home.md] [-g GIT] [-c CLASSIFY] [-v]
 
 Import Wiki to Tapd.
 
@@ -23,5 +23,8 @@ optional arguments:
                         folder path of import files
   -f /home/hugo/project/home.md, --file /home/hugo/project/home.md
                         file path of import files
-
+  -g GIT, --git GIT     git repository url (Not supported yet)
+  -c CLASSIFY, --classify CLASSIFY
+                        wiki parent name (Not supported yet)
+  -v, --version         show program's version number and exit
 ```
