@@ -1,7 +1,7 @@
-# import_auth
+# Import_Wiki_To_Tapd
 Import Wiki to Tapd.
 
-# ENV
+# Env
 ```
 pip install -r requirements.txt
 ```
