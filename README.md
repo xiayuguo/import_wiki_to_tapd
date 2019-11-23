@@ -8,15 +8,20 @@ pip install -r requirements.txt
 
 # Usage
 ```
-usage: main.py [-h] --username u --password p [--folder F] [--file f]
+usage: main.py [-h] -u xxx@mail.com -p ****** [-F /home/hugo/project]
+               [-f /home/hugo/project/home.md]
 
 Import Wiki to Tapd.
 
 optional arguments:
-  -h, --help    show this help message and exit
-  --username u  username for tapd
-  --password p  password for tapd
-  --folder F    folder path of import files
-  --file f      file path of import files
+  -h, --help            show this help message and exit
+  -u xxx@mail.com, --username xxx@mail.com
+                        username for tapd
+  -p ******, --password ******
+                        password for tapd
+  -F /home/hugo/project, --folder /home/hugo/project
+                        folder path of import files
+  -f /home/hugo/project/home.md, --file /home/hugo/project/home.md
+                        file path of import files
 
 ```
