@@ -1,7 +1,9 @@
 import os
+import time
 import asyncio
 import argparse
 
+from tqdm import tqdm
 from pyppeteer import launch
 
 
@@ -10,13 +12,21 @@ UserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) " \
             "Chrome/78.0.3904.97 Safari/537.36"
 
 
-async def create_wiki(page, create_wiki_url, title, content, parent_name="", remarks=""):
+async def create_wiki(page, create_wiki_url, title, reader, file_size, parent_name=None, remarks=""):
     await page.goto(create_wiki_url)
     await asyncio.sleep(3)
     await page.focus('#WikiName')
     await page.keyboard.type(title)
     await page.focus('#input')
-    await page.keyboard.type(content)
+    with tqdm(total=file_size, desc=f"import title {title}") as pbar:
+        while 1:
+            data = reader.read(1024)
+            if len(data) == 0:
+                break
+            else:
+                await page.keyboard.type(data)
+            pbar.update(len(data))
+
     # 回滚到页面底部
     await page.evaluate('window.scrollBy(0, document.body.scrollHeight)')
     await page.focus('#WikiNote')
@@ -29,7 +39,7 @@ async def create_wiki(page, create_wiki_url, title, content, parent_name="", rem
 
 
 async def main(params):
-    browser = await launch(headless=True)
+    browser = await launch(headless=False)
     await browser.newPage()
     page = await browser.newPage()
     await page.setUserAgent(UserAgent)
@@ -49,24 +59,29 @@ async def main(params):
     create_wiki_url = f"{wiki_url.split('?')[0]}wikis/add?parent_wiki="
     # 批量创建 wiki
     for p in params.import_list:
-        with open(p, "rb") as f:
-            title = f"{os.path.dirname(p).rstrip('/')}_{os.path.basename(p)}"
-            await create_wiki(page, create_wiki_url,
-                              title=title,
-                              content=f.read())
+        with open(p, "r") as f:
+            parent_name = os.path.dirname(p).split('/')[-1]
+            title = f"{parent_name}_{os.path.splitext(os.path.basename(p))[0]}"
+            print(f"import local file: {p}")
+            start = time.time()
+            await create_wiki(page, create_wiki_url, title=title,
+                              reader=f, file_size=os.stat(p).st_size)
+            cost = time.time() - start
+            print(f"import local file: {p}, cost: {cost} seconds")
+
     await asyncio.sleep(3)
     await browser.close()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Import Wiki to Tapd.')
-    parser.add_argument('--username', metavar='u', type=str, required=True,
-                        help='username for tapd')
-    parser.add_argument('--password', metavar='p', type=str, required=True,
-                        help='password for tapd')
-    parser.add_argument('--folder', metavar='F', type=str,
-                        help='folder path of import files')
-    parser.add_argument('--file', metavar='f', type=str,
-                        help='file path of import files')
+    parser.add_argument('-u', '--username', metavar='xxx@mail.com', type=str,
+                        required=True, help='username for tapd')
+    parser.add_argument('-p', '--password', metavar='******', type=str,
+                        required=True, help='password for tapd')
+    parser.add_argument('-F', '--folder', metavar='/home/hugo/project',
+                        type=str, help='folder path of import files')
+    parser.add_argument('-f', '--file', metavar='/home/hugo/project/home.md',
+                        type=str, help='file path of import files')
     params = parser.parse_args()
     import_list = []
     if "folder" in params:
