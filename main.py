@@ -66,7 +66,10 @@ async def create_wiki(page, create_wiki_url, title, reader, file_size, parent_na
 
 
 async def main(params):
-    browser = await launch(headless=False)
+    if params.executablePath:
+        browser = await launch(headless=not params.debug, executablePath=params.executablePath)
+    else:
+        browser = await launch(headless=not params.debug)
     await browser.newPage()
     page = await browser.newPage()
     await page.setUserAgent(UserAgent)
@@ -103,6 +106,10 @@ if __name__ == "__main__":
                         type=str, help='folder path of import files')
     parser.add_argument('-f', '--file', metavar='/home/hugo/project/home.md',
                         type=str, help='file path of import files')
+    parser.add_argument('-d', '--debug', choices=(0, 1), default=0,
+                        type=int, help='headless status')
+    parser.add_argument('-e', '--executablePath',
+                        type=str, help='path to a Chromium or Chrome executable')
     parser.add_argument('-g', '--git', type=str, help="git repository url (Not supported yet)")
     parser.add_argument('-c', '--classify', type=str, help='wiki parent name (Not supported yet)')
     parser.add_argument('-v', '--version', action='version', version=f'%(prog)s {VERSION}')
