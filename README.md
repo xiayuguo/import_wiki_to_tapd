@@ -9,7 +9,8 @@ pip install -r requirements.txt
 # Usage
 ```
 usage: main.py [-h] -u xxx@mail.com -p ****** [-F /home/hugo/project]
-               [-f /home/hugo/project/home.md] [-g GIT] [-c CLASSIFY] [-v]
+               [-f /home/hugo/project/home.md] [-d {0,1}] [-e EXECUTABLEPATH]
+               [-g GIT] [-c CLASSIFY] [-v]
 
 Import Wiki to Tapd.
 
@@ -23,6 +24,10 @@ optional arguments:
                         folder path of import files
   -f /home/hugo/project/home.md, --file /home/hugo/project/home.md
                         file path of import files
+  -d {0,1}, --debug {0,1}
+                        headless status
+  -e EXECUTABLEPATH, --executablePath EXECUTABLEPATH
+                        path to a Chromium or Chrome executable
   -g GIT, --git GIT     git repository url (Not supported yet)
   -c CLASSIFY, --classify CLASSIFY
                         wiki parent name (Not supported yet)
