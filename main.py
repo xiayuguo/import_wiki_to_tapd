@@ -45,9 +45,12 @@ async def create_wiki(page, create_wiki_url, title, reader, file_size, parent_na
     await page.keyboard.type(title)
     await page.focus('#input')
     with tqdm(total=file_size, desc=f"import title {title}") as pbar:
+        size = 0
         while 1:
             data = reader.read(1024)
+            size += len(data)
             if len(data) == 0:
+                pbar.update(file_size - size)
                 break
             else:
                 await page.keyboard.type(data)
@@ -62,7 +65,10 @@ async def create_wiki(page, create_wiki_url, title, reader, file_size, parent_na
         await page.focus('#Markdown_wikiParentName')
         await page.keyboard.type(parent_name)
     await page.click('#wiki_btn_submit')
-    await page.waitForNavigation()
+    try:
+        await page.waitForSelector("#page-content > div.wiki-wrap > div.wiki-nav > ul")
+    except:
+        print(f"获取{title}状态失败，请返回 Tapd 页面检查")
 
 
 async def main(params):
