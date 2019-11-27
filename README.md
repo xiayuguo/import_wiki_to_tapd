@@ -28,8 +28,8 @@ optional arguments:
                         headless status
   -e EXECUTABLEPATH, --executablePath EXECUTABLEPATH
                         path to a Chromium or Chrome executable
-  -g GIT, --git GIT     git repository url (Not supported yet)
+  -g GIT, --git GIT     git repository url
   -c CLASSIFY, --classify CLASSIFY
-                        wiki parent name (Not supported yet)
+                        wiki parent name
   -v, --version         show program's version number and exit
 ```
